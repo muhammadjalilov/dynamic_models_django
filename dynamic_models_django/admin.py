@@ -1,9 +1,6 @@
-from django.apps import apps
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from django.db.models import Model
 
-from dynamic_models_django.config import dynamic_models_app_label
 from dynamic_models_django.models import FieldModel, FormModel
 
 
@@ -32,7 +29,8 @@ class DynamicAdmin(admin.ModelAdmin):
     pass
 
 
-def register_dynamic_model(table_name):
-    dynamic_model = apps.get_model(dynamic_models_app_label(), table_name)
-    print(issubclass(dynamic_model,Model))
-    admin.site.register(dynamic_model, DynamicAdmin)
+def register_dynamic_model(dynamic_model=None):
+    models = [dynamic_model]
+    for model in models:
+        if model not in admin.site._registry:
+            admin.site.register(model, DynamicAdmin)
