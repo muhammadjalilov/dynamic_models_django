@@ -32,18 +32,16 @@ def register_dynamic_models():
         dynamic_model = creator._generate_model(
             creator._get_table_name(), creator._get_fields()
         )
-        # dynamic_model = apps.get_model(dynamic_models_app_label(),creator._get_table_name())  # xato berdi app saqlamayopti dynamic modellarni
+        # dynamic_model = apps.get_model(dynamic_models_app_label(),creator._get_table_name())  # xato berdi app rerundan keyin uchib ketadi dynamic modellar
         model_name = dynamic_model._meta.object_name
 
         if model_name not in registered_models:
             try:
-
                 class DynamicModelAdmin(admin.ModelAdmin):
                     list_display = [field.name for field in dynamic_model._meta.fields]
 
                 admin.site.register(dynamic_model, DynamicModelAdmin)
                 registered_models.append(model_name)
-                print(registered_models)
             except admin.sites.AlreadyRegistered:
                 pass
 

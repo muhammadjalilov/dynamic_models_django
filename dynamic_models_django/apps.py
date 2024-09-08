@@ -1,4 +1,6 @@
-from django.apps import AppConfig, apps
+from django.apps import AppConfig
+from django.db.models.signals import post_migrate
+
 
 
 class DynamicModelsDjangoConfig(AppConfig):
@@ -7,3 +9,4 @@ class DynamicModelsDjangoConfig(AppConfig):
 
     def ready(self):
         import dynamic_models_django.signals
+

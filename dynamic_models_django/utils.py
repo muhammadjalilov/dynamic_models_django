@@ -48,5 +48,4 @@ class DynamicTableCreator:
 
         return type(table_name, (models.Model,), attrs)
 
-
 registered_models = []

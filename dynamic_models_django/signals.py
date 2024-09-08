@@ -15,9 +15,9 @@ def create_table_after_form_save(sender, instance, created, **kwargs):
     if created:
         table_name = f"{dynamic_models_app_label()}_{slugify(instance.form_name).replace('-', '_')}".lower()
         transaction.on_commit(lambda: create_and_register_model(instance, table_name))
-        register_dynamic_models()
 
 
 def create_and_register_model(instance, table_name):
     dynamic_creator = DynamicTableCreator(instance)
     dynamic_creator.create_table()
+    register_dynamic_models()
