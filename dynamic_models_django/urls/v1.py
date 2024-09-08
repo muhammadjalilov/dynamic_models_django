@@ -8,6 +8,7 @@ from dynamic_models_django.models import FormModel
 
 router = DefaultRouter()
 
+
 models = FormModel.objects.all()
 for i in models:
     table_name = (

@@ -1,9 +1,7 @@
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.text import slugify
 
-from dynamic_models_django.admin import register_dynamic_models
 from dynamic_models_django.models import FormModel
 from dynamic_models_django.utils import DynamicTableCreator
 
