@@ -16,9 +16,9 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('',include('dynamic_models_django.urls.v1'))
+    path("", include("dynamic_models_django.urls.v1")),
 ]

@@ -11,7 +11,7 @@ def get_dynamic_serializer(table_name):
     class DynamicSerializer(serializers.ModelSerializer):
         class Meta:
             model = dynamic_model
-            fields = '__all__'
+            fields = "__all__"
 
     return DynamicSerializer
 

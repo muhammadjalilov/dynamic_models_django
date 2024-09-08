@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import TabularInline
 
 from dynamic_models_django.models import FieldModel, FormModel
+from dynamic_models_django.utils import DynamicTableCreator, registered_models
 
 
 class FieldModelInline(TabularInline):
@@ -25,12 +26,26 @@ class FieldModelAdmin(admin.ModelAdmin):
     search_fields = ("name", "form__form_name")
 
 
-class DynamicAdmin(admin.ModelAdmin):
-    pass
+def register_dynamic_models():
+    for form_model in FormModel.objects.all():
+        creator = DynamicTableCreator(form_model)
+        dynamic_model = creator._generate_model(
+            creator._get_table_name(), creator._get_fields()
+        )
+        # dynamic_model = apps.get_model(dynamic_models_app_label(),creator._get_table_name())  # xato berdi app saqlamayopti dynamic modellarni
+        model_name = dynamic_model._meta.object_name
+
+        if model_name not in registered_models:
+            try:
+
+                class DynamicModelAdmin(admin.ModelAdmin):
+                    list_display = [field.name for field in dynamic_model._meta.fields]
+
+                admin.site.register(dynamic_model, DynamicModelAdmin)
+                registered_models.append(model_name)
+                print(registered_models)
+            except admin.sites.AlreadyRegistered:
+                pass
 
 
-def register_dynamic_model(dynamic_model=None):
-    models = [dynamic_model]
-    for model in models:
-        if model not in admin.site._registry:
-            admin.site.register(model, DynamicAdmin)
+register_dynamic_models()

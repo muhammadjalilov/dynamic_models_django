@@ -1,5 +1,4 @@
-from django.db import connections, models
-from django.db.utils import DEFAULT_DB_ALIAS
+from django.db import DEFAULT_DB_ALIAS, connections, models
 from django.utils.text import slugify
 
 from dynamic_models_django.config import dynamic_models_app_label
@@ -15,10 +14,11 @@ class DynamicTableCreator:
         fields = self._get_fields()
 
         with connections[self.db_name].schema_editor() as editor:
-            editor.create_model(self._generate_model(table_name, fields))
+            model = self._generate_model(table_name, fields)
+            editor.create_model(model)
 
     def _get_table_name(self):
-        return f"{dynamic_models_app_label()}_{slugify(self.form_model.form_name).replace('-','_')}".lower()
+        return f"{dynamic_models_app_label()}_{slugify(self.form_model.form_name).replace('-', '_')}".lower()
 
     def _get_fields(self):
         fields = {
@@ -47,3 +47,6 @@ class DynamicTableCreator:
         }
 
         return type(table_name, (models.Model,), attrs)
+
+
+registered_models = []
