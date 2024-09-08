@@ -13,11 +13,9 @@ def create_table_after_form_save(sender, instance, created, **kwargs):
     from dynamic_models_django.config import dynamic_models_app_label
 
     if created:
-        table_name = f"{dynamic_models_app_label()}_{slugify(instance.form_name).replace('-', '_')}".lower()
-        transaction.on_commit(lambda: create_and_register_model(instance, table_name))
+        transaction.on_commit(lambda: create_and_register_model(instance))
 
 
-def create_and_register_model(instance, table_name):
+def create_and_register_model(instance):
     dynamic_creator = DynamicTableCreator(instance)
     dynamic_creator.create_table()
-    register_dynamic_models()

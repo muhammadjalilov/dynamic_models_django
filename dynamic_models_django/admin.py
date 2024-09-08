@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.contrib import admin
 from django.contrib.admin import TabularInline
 
@@ -26,6 +27,15 @@ class FieldModelAdmin(admin.ModelAdmin):
     search_fields = ("name", "form__form_name")
 
 
+def is_model_registered(model_name):
+    try:
+        # Retrieve the model to check if it's registered
+        apps.get_model("your_app_label", model_name)
+        return True
+    except LookupError:
+        return False
+
+
 def register_dynamic_models():
     for form_model in FormModel.objects.all():
         creator = DynamicTableCreator(form_model)
@@ -35,8 +45,9 @@ def register_dynamic_models():
         # dynamic_model = apps.get_model(dynamic_models_app_label(),creator._get_table_name())  # xato berdi app rerundan keyin uchib ketadi dynamic modellar
         model_name = dynamic_model._meta.object_name
 
-        if model_name not in registered_models:
+        if not is_model_registered(model_name) and model_name not in registered_models:
             try:
+
                 class DynamicModelAdmin(admin.ModelAdmin):
                     list_display = [field.name for field in dynamic_model._meta.fields]
 
